@@ -29,6 +29,14 @@ public class OrderSelectionRecurrent implements OrderSelection {
         public int hashCode() {
             return Objects.hash(k, w);
         }
+
+        @Override
+        public String toString() {
+            return "Key{" +
+                    "k=" + k +
+                    ", w=" + w +
+                    '}';
+        }
     }
 
     HashMap<Key, CurrentIncomeAndPath> stepsMap = new HashMap<>();
@@ -43,6 +51,14 @@ public class OrderSelectionRecurrent implements OrderSelection {
             this.currentIncome = currentIncome;
             this.path = path;
         }
+
+        @Override
+        public String toString() {
+            return "CurrentIncomeAndPath{" +
+                    "currentIncome=" + currentIncome +
+                    ", path=" + path +
+                    '}';
+        }
     }
 
     private CurrentIncomeAndPath recursion(int k, int w) {
@@ -56,11 +72,14 @@ public class OrderSelectionRecurrent implements OrderSelection {
             }
         } else {
             Key noKey = new Key(k-1, w);
-            Key yesKey = new Key(k, w - cost.get(k));
+            Key yesKey = new Key(k-1, w - cost.get(k));
 
             CurrentIncomeAndPath noCurrentIncomeAndPath;
             if(stepsMap.containsKey(noKey)) {
                 noCurrentIncomeAndPath = stepsMap.get(noKey);
+                //noCurrentIncomeAndPath = recursion(k - 1, w);
+                //System.out.println("take no");
+                System.out.println("qwerty1 " + noKey + " " + noCurrentIncomeAndPath);
             } else {
                 noCurrentIncomeAndPath = recursion(k - 1, w);
                 stepsMap.put(noKey, noCurrentIncomeAndPath);
@@ -70,14 +89,21 @@ public class OrderSelectionRecurrent implements OrderSelection {
                 CurrentIncomeAndPath yesCurrentIncomeAndPath;
                 if(stepsMap.containsKey(yesKey)) {
                     yesCurrentIncomeAndPath = stepsMap.get(yesKey);
+                    //yesCurrentIncomeAndPath = recursion(k - 1, w - cost.get(k));
+                    //yesCurrentIncomeAndPath.currentIncome += income.get(k);
+                    //System.out.println("take yes");
                 } else {
                     yesCurrentIncomeAndPath = recursion(k - 1, w - cost.get(k));
-                    yesCurrentIncomeAndPath.currentIncome += income.get(k);
-                    stepsMap.put(yesKey, yesCurrentIncomeAndPath);
+
+
+                    System.out.println("qwerty2 " + yesKey + " " + yesCurrentIncomeAndPath);
                 }
 
-                if (yesCurrentIncomeAndPath.currentIncome > noCurrentIncomeAndPath.currentIncome) {
+                if (yesCurrentIncomeAndPath.currentIncome + income.get(k) > noCurrentIncomeAndPath.currentIncome) {
+                    yesCurrentIncomeAndPath.currentIncome += income.get(k);
+                    stepsMap.put(yesKey, yesCurrentIncomeAndPath);
                     yesCurrentIncomeAndPath.path.add(k);
+                    //System.out.println(yesCurrentIncomeAndPath);
                     return yesCurrentIncomeAndPath;
                 } else {
                     return noCurrentIncomeAndPath;

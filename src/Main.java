@@ -1,4 +1,5 @@
 import model.Dataset;
+import solver.OrderSelectionColumn;
 import solver.OrderSelectionRecurrent;
 import util.Reader;
 
@@ -11,7 +12,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Task task = new Task(datasets.get(1), new OrderSelectionRecurrent());
+        datasets.forEach(dataset -> {
+            System.out.println(dataset.getFile());
+            Task task = new Task(dataset, new OrderSelectionColumn());
+            System.out.println("   " + task.getMaxIncome() + " " + task.getOrders());
+        });
 
     }
 }
