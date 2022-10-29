@@ -1,5 +1,6 @@
 package solver;
 
+import model.CostIncome;
 import model.Result;
 
 import java.util.ArrayList;
@@ -55,24 +56,29 @@ public class OrderSelectionColumn implements OrderSelection {
     }
 
     @Override
-    public Result orderSelection(int performance, int count, ArrayList<Integer> cost, ArrayList<Integer> income) {
+    public Result orderSelection(int performance, int count, ArrayList<CostIncome> costIncomes) {
 
         ArrayList<CurrentIncomeAndPath> firstColumn = new ArrayList<>(performance);
         ArrayList<CurrentIncomeAndPath> secondColumn;
 
+//        System.out.println(performance);
+//        System.out.println(count);
+//        System.out.println(cost);
+//        System.out.println(income);
+
 
         for(int i = 1; i <= performance; i++) {
-            if(i >= cost.get(0)) {
+            if(i >= costIncomes.get(0).getCost()) {
                 ArrayList<Integer> path = new ArrayList<>();
                 path.add(1);
-                firstColumn.add(new CurrentIncomeAndPath(income.get(0), path));
+                firstColumn.add(new CurrentIncomeAndPath(costIncomes.get(0).getIncome(), path));
             } else {
                 firstColumn.add(new CurrentIncomeAndPath(0, new ArrayList<>()));
             }
         }
 
         for(int order = 2; order <= count; order++) {
-            secondColumn = fillColumn(performance, order, cost.get(order - 1), income.get(order - 1), firstColumn);
+            secondColumn = fillColumn(performance, order, costIncomes.get(order - 1).getCost(), costIncomes.get(order - 1).getIncome(), firstColumn);
             firstColumn = secondColumn;
         }
 

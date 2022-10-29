@@ -6,16 +6,19 @@ public class Dataset {
 
     private final int performance;
     private final int count;
-    private final ArrayList<Integer> cost;
-    private final ArrayList<Integer> income;
+    private final ArrayList<CostIncome> costIncomes;
 
     private final String file;
 
     public Dataset(int performance, int count, ArrayList<Integer> cost, ArrayList<Integer> income, String file) {
         this.performance = performance;
         this.count = count;
-        this.cost = cost;
-        this.income = income;
+
+        this.costIncomes = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            costIncomes.add(new CostIncome(cost.get(i), income.get(i)));
+        }
+
         this.file = file;
     }
 
@@ -27,12 +30,8 @@ public class Dataset {
         return count;
     }
 
-    public ArrayList<Integer> getCost() {
-        return cost;
-    }
-
-    public ArrayList<Integer> getIncome() {
-        return income;
+    public ArrayList<CostIncome> getCostIncomes() {
+        return costIncomes;
     }
 
     public String getFile() {
@@ -44,8 +43,8 @@ public class Dataset {
         return "Dataset{" +
                 "performance=" + performance +
                 ", count=" + count +
-                ", cost=" + cost +
-                ", income=" + income +
+                ", costIncomes=" + costIncomes +
+                ", file='" + file + '\'' +
                 '}';
     }
 }

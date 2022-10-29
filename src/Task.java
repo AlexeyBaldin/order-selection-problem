@@ -1,3 +1,4 @@
+import model.CostIncome;
 import model.Dataset;
 import model.Result;
 import permutation.Permutator;
@@ -11,25 +12,20 @@ public class Task {
     private final Result result;
 
     public Task(Dataset dataset, OrderSelection solver) {
-        this.result = solver.orderSelection(dataset.getPerformance(), dataset.getCount(), dataset.getCost(), dataset.getIncome());
+        this.result = solver.orderSelection(dataset.getPerformance(), dataset.getCount(), dataset.getCostIncomes());
     }
 
     public Task(Dataset dataset, OrderSelection solver, Permutator permutator, int part) {
-        ArrayList<Integer> newOrders = permutator.getNewOrders(dataset.getPerformance(), dataset.getCount(), dataset.getCost(), dataset.getIncome());
-
-        ArrayList<Integer> newCost = new ArrayList<>();
-        ArrayList<Integer> newIncome = new ArrayList<>();
+        ArrayList<CostIncome> newOrder = permutator.getNewOrders(dataset.getPerformance(), dataset.getCount(), dataset.getCostIncomes());
 
         int newCount = dataset.getCount() % part == 0 ? dataset.getCount()/part : dataset.getCount()/part + 1;
 
-        Iterator<Integer> iterator = newOrders.iterator();
-        for (int i = 0; i < newCount; i++) {
-            int index = iterator.next();
-            newCost.add(dataset.getCost().get(index));
-            newIncome.add(dataset.getIncome().get(index));
+        for (int i = newCount-1; i > newCount; i--) {
+            newOrder.remove(i);
         }
+        System.out.println(newOrder);
 
-        this.result = solver.orderSelection(dataset.getPerformance(), newCount, newCost, newIncome);
+        this.result = solver.orderSelection(dataset.getPerformance(), newCount, newOrder);
     }
 
     public int getMaxIncome() {
