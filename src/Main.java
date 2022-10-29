@@ -1,29 +1,95 @@
 import model.Dataset;
-import permutation.NoChangePermutator;
+import permutation.AveragePriceWithCoeffPermutator;
+import permutation.Permutator;
+import permutation.Permutator1;
+import permutation.ProfitSortPermutator;
 import solver.OrderSelectionColumn;
-import solver.OrderSelectionRecurrent;
 import util.Reader;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Main {
 
     static ArrayList<Dataset> datasets = Reader.getDatasets();
 
     public static void main(String[] args) {
+        //findCoeff(-0.5,0.5,0.01);
+        //useCoeffAveragePrice(-0.026);
+        simpleTest();
 
+        //Task task1 = new Task(datasets.get(1), new OrderSelectionColumn(), new Permutator1(), 2);
+
+
+//        Task task2 = new Task(datasets.get(0), new OrderSelectionRecurrent());
+
+    }
+
+    private static void simpleTest() {
         datasets.forEach(dataset -> {
+            Task fullTask = new Task(dataset, new OrderSelectionColumn());
+            Task baseTask = new Task(dataset, new OrderSelectionColumn(), new ProfitSortPermutator(), 3);
+
+            Permutator1 permutator = new Permutator1();
+            Task myTask = new Task(dataset, new OrderSelectionColumn(), permutator, 3);
+
+            double baseQuality = (double) baseTask.getMaxIncome() / fullTask.getMaxIncome();
+            double myQuality = (double) myTask.getMaxIncome() / fullTask.getMaxIncome();
+            double myProfit = myQuality - baseQuality;
+
             System.out.println(dataset.getFile());
-
-            Task task = new Task(dataset, new OrderSelectionColumn(), new NoChangePermutator(), 2);
-
-            System.out.println("   " + dataset);
-            System.out.println("   " + task.getMaxIncome() + " " + task.getOrders());
+            System.out.println("   BasePermutation: maxIncome=" + baseTask.getMaxIncome() +
+                    " | MyPermutation: maxIncome=" + myTask.getMaxIncome() + " | baseQuality=" +
+                    baseQuality + " | myQuality=" + myQuality + " | myProfit=" + myProfit);
         });
+    }
 
+    private static void findCoeff(double start, double finish, double step) {
 
-//        Task task1 = new Task(datasets.get(0), new OrderSelectionRecurrent());
+        double oldProfit = 0.0;
+        double oldCoeff = 0.0;
+        for(double c = start; c <= finish; c += step) {
+            double profit = 0.0;
+            for (Dataset dataset :
+                    datasets) {
+                Task fullTask = new Task(dataset, new OrderSelectionColumn());
+                Task baseTask = new Task(dataset, new OrderSelectionColumn(), new ProfitSortPermutator(), 3);
+                Permutator1 permutator = new Permutator1();
+                permutator.setCoefficient(c);
+                Task myTask = new Task(dataset, new OrderSelectionColumn(), permutator, 3);
 
+                double baseQuality = (double) baseTask.getMaxIncome() / fullTask.getMaxIncome();
+                double myQuality = (double) myTask.getMaxIncome() / fullTask.getMaxIncome();
+                profit += myQuality - baseQuality;
+            }
+
+            if(profit > oldProfit) {
+                oldProfit = profit;
+                oldCoeff = c;
+            }
+            System.out.println(c + "   " + profit);
+        }
+
+        System.out.println(oldProfit);
+        System.out.println(oldCoeff);
+    }
+
+    private static void useCoeffAveragePrice(double coefficient) {
+        datasets.forEach(dataset -> {
+            Task fullTask = new Task(dataset, new OrderSelectionColumn());
+            Task baseTask = new Task(dataset, new OrderSelectionColumn(), new ProfitSortPermutator(), 3);
+
+            AveragePriceWithCoeffPermutator permutator = new AveragePriceWithCoeffPermutator();
+            permutator.setCoefficient(coefficient);
+            Task myTask = new Task(dataset, new OrderSelectionColumn(), permutator, 3);
+
+            double baseQuality = (double) baseTask.getMaxIncome() / fullTask.getMaxIncome();
+            double myQuality = (double) myTask.getMaxIncome() / fullTask.getMaxIncome();
+            double myProfit = myQuality - baseQuality;
+
+            System.out.println(dataset.getFile());
+            System.out.println("   BasePermutation: maxIncome=" + baseTask.getMaxIncome() +
+                    " | MyPermutation: maxIncome=" + myTask.getMaxIncome() + " | baseQuality=" +
+                    baseQuality + " | myQuality=" + myQuality + " | myProfit=" + myProfit);
+        });
     }
 }

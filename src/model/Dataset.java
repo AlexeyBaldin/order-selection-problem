@@ -16,7 +16,7 @@ public class Dataset {
 
         this.costIncomes = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            costIncomes.add(new CostIncome(cost.get(i), income.get(i)));
+            costIncomes.add(new CostIncome(i+1, cost.get(i), income.get(i)));
         }
 
         this.file = file;
@@ -31,7 +31,7 @@ public class Dataset {
     }
 
     public ArrayList<CostIncome> getCostIncomes() {
-        return costIncomes;
+        return new ArrayList<>(costIncomes);
     }
 
     public String getFile() {

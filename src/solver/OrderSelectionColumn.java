@@ -70,7 +70,7 @@ public class OrderSelectionColumn implements OrderSelection {
         for(int i = 1; i <= performance; i++) {
             if(i >= costIncomes.get(0).getCost()) {
                 ArrayList<Integer> path = new ArrayList<>();
-                path.add(1);
+                path.add(costIncomes.get(0).getOrder());
                 firstColumn.add(new CurrentIncomeAndPath(costIncomes.get(0).getIncome(), path));
             } else {
                 firstColumn.add(new CurrentIncomeAndPath(0, new ArrayList<>()));
@@ -78,7 +78,7 @@ public class OrderSelectionColumn implements OrderSelection {
         }
 
         for(int order = 2; order <= count; order++) {
-            secondColumn = fillColumn(performance, order, costIncomes.get(order - 1).getCost(), costIncomes.get(order - 1).getIncome(), firstColumn);
+            secondColumn = fillColumn(performance, costIncomes.get(order - 1).getOrder(), costIncomes.get(order - 1).getCost(), costIncomes.get(order - 1).getIncome(), firstColumn);
             firstColumn = secondColumn;
         }
 

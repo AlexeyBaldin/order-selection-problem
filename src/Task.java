@@ -13,6 +13,7 @@ public class Task {
 
     public Task(Dataset dataset, OrderSelection solver) {
         this.result = solver.orderSelection(dataset.getPerformance(), dataset.getCount(), dataset.getCostIncomes());
+        this.result.getOrders().sort((o1, o2) -> o1 - o2);
     }
 
     public Task(Dataset dataset, OrderSelection solver, Permutator permutator, int part) {
@@ -20,12 +21,10 @@ public class Task {
 
         int newCount = dataset.getCount() % part == 0 ? dataset.getCount()/part : dataset.getCount()/part + 1;
 
-        for (int i = newCount-1; i > newCount; i--) {
-            newOrder.remove(i);
-        }
-        System.out.println(newOrder);
+        newOrder.subList(newCount, dataset.getCount()).clear();
 
         this.result = solver.orderSelection(dataset.getPerformance(), newCount, newOrder);
+        this.result.getOrders().sort((o1, o2) -> o1 - o2);
     }
 
     public int getMaxIncome() {
