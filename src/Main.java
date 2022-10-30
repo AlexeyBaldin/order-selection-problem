@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args) {
         //findCoeff(-0.5,0.5,0.01);
         //useCoeffAveragePrice(-0.026);
-        simpleTest();
+        taskWithCoefficient();
 
         //Task task1 = new Task(datasets.get(1), new OrderSelectionColumn(), new Permutator1(), 2);
 
@@ -24,13 +24,13 @@ public class Main {
 
     }
 
-    private static void simpleTest() {
+    private static void taskWithCoefficient() {
         datasets.forEach(dataset -> {
             Task fullTask = new Task(dataset, new OrderSelectionColumn());
             Task baseTask = new Task(dataset, new OrderSelectionColumn(), new ProfitSortPermutator(), 3);
 
-            Permutator1 permutator = new Permutator1();
-            Task myTask = new Task(dataset, new OrderSelectionColumn(), permutator, 3);
+            Task myTask = new Task(dataset, new OrderSelectionColumn(), new AveragePriceWithCoeffPermutator(), 3,
+                    -0.1, 0.1, 0.001);
 
             double baseQuality = (double) baseTask.getMaxIncome() / fullTask.getMaxIncome();
             double myQuality = (double) myTask.getMaxIncome() / fullTask.getMaxIncome();
@@ -38,7 +38,7 @@ public class Main {
 
             System.out.println(dataset.getFile());
             System.out.println("   BasePermutation: maxIncome=" + baseTask.getMaxIncome() +
-                    " | MyPermutation: maxIncome=" + myTask.getMaxIncome() + " | baseQuality=" +
+                    " | MyPermutation: maxIncome=" + myTask.getMaxIncome() + ", coefficient=" + myTask.getCoefficient() + " | baseQuality=" +
                     baseQuality + " | myQuality=" + myQuality + " | myProfit=" + myProfit);
         });
     }

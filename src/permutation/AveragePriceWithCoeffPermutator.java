@@ -4,7 +4,7 @@ import model.CostIncome;
 
 import java.util.ArrayList;
 
-public class AveragePriceWithCoeffPermutator implements Permutator {
+public class AveragePriceWithCoeffPermutator implements PermutatorWithCoefficient {
 
     private double coefficient = 0.0;
 
@@ -16,7 +16,6 @@ public class AveragePriceWithCoeffPermutator implements Permutator {
     public ArrayList<CostIncome> getNewOrders(int performance, int count, ArrayList<CostIncome> costIncomes) {
 
         double average = 0.0;
-        double dispersion = 0.0;
         for (CostIncome costIncome :
                 costIncomes) {
             average += (double) costIncome.getIncome() / costIncome.getCost();

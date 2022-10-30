@@ -4,7 +4,7 @@ import model.CostIncome;
 
 import java.util.ArrayList;
 
-public class Permutator1 implements Permutator {
+public class Permutator1 implements PermutatorWithCoefficient {
 
     private double coefficient = 0.0;
 
