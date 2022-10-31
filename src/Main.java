@@ -4,6 +4,7 @@ import permutation.Permutator;
 import permutation.Permutator1;
 import permutation.ProfitSortPermutator;
 import solver.OrderSelectionColumn;
+import solver.OrderSelectionRecurrent;
 import util.Reader;
 
 import java.util.ArrayList;
@@ -15,12 +16,18 @@ public class Main {
     public static void main(String[] args) {
         //findCoeff(-0.5,0.5,0.01);
         //useCoeffAveragePrice(-0.026);
-        taskWithCoefficient();
+        //taskWithCoefficient();
 
         //Task task1 = new Task(datasets.get(1), new OrderSelectionColumn(), new Permutator1(), 2);
 
 
-//        Task task2 = new Task(datasets.get(0), new OrderSelectionRecurrent());
+        for (Dataset dataset : datasets) {
+            Task task2 = new Task(dataset, new OrderSelectionRecurrent());
+            System.out.println(dataset.getFile());
+            System.out.println(" " + dataset);
+            System.out.println("  " + task2.getMaxIncome());
+        }
+
 
     }
 
