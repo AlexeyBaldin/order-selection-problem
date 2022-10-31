@@ -64,10 +64,10 @@ public class OrderSelectionRecurrent implements OrderSelection {
             if (costIncomes.get(k).getCost() <= w) {
                 int current = recursiveCache(k - 1, w - costIncomes.get(k).getCost(), costIncomes) + costIncomes.get(k).getIncome();
 
-                if (!cache.containsKey(k)) {
-                    cache.put(k, new HashMap<>());
-                    if (!cache.get(k).containsKey(w)) {
-                        cache.get(k).put(w, current);
+                if (!cache.containsKey(k - 1)) {
+                    cache.put(k - 1, new HashMap<>());
+                    if (!cache.get(k - 1).containsKey(w)) {
+                        cache.get(k - 1).put(w, Math.max(current, previous));
                         //System.out.println("current cashe");
                     }
                 }
